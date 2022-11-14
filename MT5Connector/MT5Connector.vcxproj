@@ -133,9 +133,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="MTApiService">
-      <HintPath>..\build\products\Release\MTApiService.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
@@ -164,6 +161,16 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="cl.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MTApiService\MTApiService.csproj">
+      <Project>{de76d5c7-b99c-4467-8408-78173bdd84e0}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
