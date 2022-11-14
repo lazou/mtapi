@@ -80,10 +80,15 @@
                 </RegistryKey>
 
             </Component>
+			
+			<Component Id="NewtonsoftJsondll" Directory="INSTALLFOLDER">
+				<File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" KeyPath="yes"
+                    src="$(var.ProductPath)Newtonsoft.Json.dll"/>
+			</Component>
 
-            <Component Id="MTApiServiceDll" Directory="INSTALLFOLDER">
-                <File Id="GAC_MTApiService.dll" Name="MTApiService.dll" KeyPath="yes"
-                    src="$(var.ProductPath)MTApiService.dll"/>
+            <Component Id="MtApiServiceNetCoreDll" Directory="INSTALLFOLDER">
+                <File Id="GAC_MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
+                    src="$(var.ProductPath)MtApiServiceNetCore.dll"/>
             </Component>
 
             <Component Id="MtApi5Expert" Directory="ExpertFolder">
