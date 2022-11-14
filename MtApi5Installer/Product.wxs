@@ -76,7 +76,7 @@
                 <RegistryKey Root="HKLM"
                     Key="Software\Microsoft\.NetFramework\v4.0.30319\AssemblyFoldersEx\$(var.ProductName)"
                     Action="createAndRemoveOnUninstall">
-                    <RegistryValue Type="string" Value="[INSTALLFOLDER]"/>
+					<RegistryValue Type="string" Value="[INSTALLFOLDER]"/>
                 </RegistryKey>
 
             </Component>
