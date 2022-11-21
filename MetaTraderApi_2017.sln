@@ -27,6 +27,14 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "MtApi5Bootstrapper", "MtApi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MtApiServiceNetCore", "MtApiServiceNetCore\MtApiServiceNetCore.csproj", "{7CAFAAE2-0C15-479A-B16D-C2FCE0A48E11}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mq5", "mq5", "{45176C1B-E5C4-4DD2-8B5D-ACD88357F78D}"
+	ProjectSection(SolutionItems) = preProject
+		mq5\hash.mqh = mq5\hash.mqh
+		mq5\json.mqh = mq5\json.mqh
+		mq5\MtApi5.ex5 = mq5\MtApi5.ex5
+		mq5\MtApi5.mq5 = mq5\MtApi5.mq5
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
