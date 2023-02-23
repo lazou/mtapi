@@ -7903,7 +7903,7 @@ bool JsonToMqlTradeRequest(JSONObject *jo, MqlTradeRequest& request)
 JSONObject* MqlTickToJson(MqlTick& tick)
 {
     JSONObject *jo = new JSONObject();
-    jo.put("MtTime", new JSONNumber(tick.time));
+    jo.put("MtTime", new JSONNumber((int)tick.time));
     jo.put("bid", new JSONNumber(tick.bid));
     jo.put("ask", new JSONNumber(tick.ask));
     jo.put("last", new JSONNumber(tick.last));
