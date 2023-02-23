@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mq5", "mq5", "{45176C1B-E5C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTApiServerStandalone", "TestClients\MTApiServerStandalone\MTApiServerStandalone.csproj", "{A5655FF3-4E57-4321-8FB2-D1A820D8EBBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTApiClientStandalone", "TestClients\MTApiClientStandalone\MTApiClientStandalone.csproj", "{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTApiClientStandalone", "TestClients\MTApiClientStandalone\MTApiClientStandalone.csproj", "{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MtApiServiceTest", "MtApiServiceTest\MtApiServiceTest.csproj", "{239B1691-0428-43D9-A631-3B8991284055}"
 EndProject
@@ -189,6 +189,22 @@ Global
 		{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}.Release|x64.Build.0 = Release|Any CPU
 		{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}.Release|x86.ActiveCfg = Release|Any CPU
 		{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}.Release|x86.Build.0 = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|Win32.Build.0 = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|x64.Build.0 = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Debug|x86.Build.0 = Debug|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|Win32.ActiveCfg = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|Win32.Build.0 = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|x64.ActiveCfg = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|x64.Build.0 = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|x86.ActiveCfg = Release|Any CPU
+		{239B1691-0428-43D9-A631-3B8991284055}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
