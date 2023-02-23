@@ -7047,10 +7047,7 @@ string OnRequest(string json)
 string CreateErrorResponse(int code, string message_er)
 {
    JSONValue* jsonError;
-   if (code == 0)
-      jsonError = new JSONString("0");
-   else
-      jsonError = new JSONNumber((long)code);
+   jsonError = new JSONNumber((long)code);
       
    JSONObject *joResponse = new JSONObject();
    joResponse.put("ErrorCode", jsonError);
@@ -7064,7 +7061,7 @@ string CreateErrorResponse(int code, string message_er)
 string CreateSuccessResponse(string responseName, JSONValue* responseBody)
 {
    JSONObject *joResponse = new JSONObject();
-   joResponse.put("ErrorCode", new JSONString("0"));
+   joResponse.put("ErrorCode", new JSONNumber(0));
       
    if (responseBody != NULL)
    {
