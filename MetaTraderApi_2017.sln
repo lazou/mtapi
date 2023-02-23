@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTApiServerStandalone", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTApiClientStandalone", "TestClients\MTApiClientStandalone\MTApiClientStandalone.csproj", "{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MtApiServiceTest", "MtApiServiceTest\MtApiServiceTest.csproj", "{239B1691-0428-43D9-A631-3B8991284055}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

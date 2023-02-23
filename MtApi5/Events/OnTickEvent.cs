@@ -1,6 +1,6 @@
 ﻿namespace MtApi5.Events
 {
-    internal class OnTickEvent
+    public class OnTickEvent
     {
         public MqlTick Tick { get; set; }
         public string Instrument { get; set; }
