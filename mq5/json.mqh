@@ -207,6 +207,7 @@ public:
 class JSONNumber : public JSONValue 
   {
 private:
+   bool              _isLong;
    long              _long;
    double            _dbl;
 public:
@@ -214,16 +215,18 @@ public:
      {
       _long= l;
       _dbl = 0;
+      _isLong=true;
      }
                      JSONNumber(double d) 
      {
       _long= 0;
       _dbl = d;
+      _isLong=false;
      }
    /// Get the long value, (cast) from internal double if necessary.
    long getLong() 
      {
-      if(_dbl!=0) 
+      if(!_isLong) 
         {
          return (long)_dbl;
            } else {
@@ -233,7 +236,7 @@ public:
    /// Get the int value, (cast) from internal value.
    int getInt() 
      {
-      if(_dbl!=0) 
+      if(!_isLong) 
         {
          return (int)_dbl;
            } else {
@@ -243,7 +246,7 @@ public:
    /// Get the double value, (cast) from internal long if necessary.
    double getDouble()
      {
-      if(_long!=0) 
+      if(_isLong) 
         {
          return (double)_long;
            } else {
@@ -253,11 +256,11 @@ public:
    string toString() 
      {
       // Favour the long
-      if(_long!=0) 
+      if(_isLong) 
         {
          return (string)_long;
            } else {
-         return (_dbl!=0) ? (string)_dbl : "0";
+         return (string)_dbl;
         }
      }
   };
