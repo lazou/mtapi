@@ -3422,7 +3422,7 @@ namespace MtApi5
         }
 
         private void ReceivedOnTradeTransactionEvent(int expertHandler, string payload)
-        {            
+        {
             var e = JsonSerializer.Deserialize<OnTradeTransactionEvent>(payload);
             OnTradeTransaction?.Invoke(this, new Mt5TradeTransactionEventArgs
             {
