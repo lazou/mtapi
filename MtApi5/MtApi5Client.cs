@@ -6,9 +6,11 @@ using MTApiService;
 using System.Collections;
 using System.ServiceModel;
 using MtApi5.Requests;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 using MtApi5.Events;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using static MtApiServiceNetCore.JsonConverter;
 
 namespace MtApi5
 {
@@ -30,6 +32,8 @@ namespace MtApi5
         private const string LogProfileName = "MtApi5Client";
 
         public delegate void QuoteHandler(object sender, string symbol, double bid, double ask);
+        private JsonSerializerOptions deserializeOptions = new JsonSerializerOptions { Converters = { new Int64JsonConverter(), new UInt64JsonConverter() } };
+        private JsonSerializerOptions serializeOptions = new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
 
         #region Private Fields
@@ -3418,8 +3422,8 @@ namespace MtApi5
         }
 
         private void ReceivedOnTradeTransactionEvent(int expertHandler, string payload)
-        {
-            var e = JsonConvert.DeserializeObject<OnTradeTransactionEvent>(payload);
+        {            
+            var e = JsonSerializer.Deserialize<OnTradeTransactionEvent>(payload);
             OnTradeTransaction?.Invoke(this, new Mt5TradeTransactionEventArgs
             {
                 ExpertHandle = expertHandler,
@@ -3431,7 +3435,7 @@ namespace MtApi5
 
         private void ReceivedOnBookEvent(int expertHandler, string payload)
         {
-            var e = JsonConvert.DeserializeObject<OnBookEvent>(payload);
+            var e = JsonSerializer.Deserialize<OnBookEvent>(payload);
             OnBookEvent?.Invoke(this, new Mt5BookEventArgs
             {
                 ExpertHandle = expertHandler,
@@ -3441,7 +3445,7 @@ namespace MtApi5
 
         private void ReceivedOnTickEvent(int expertHandler, string payload)
         {
-            var e = JsonConvert.DeserializeObject<OnTickEvent>(payload);
+            var e = JsonSerializer.Deserialize<OnTickEvent>(payload);
             var quote = new Mt5Quote(e.Instrument, e.Tick.bid, e.Tick.ask)
             {
                 ExpertHandle = expertHandler,
@@ -3456,13 +3460,13 @@ namespace MtApi5
 
         private void ReceivedOnLastTimeBarEvent(int expertHandler, string payload)
         {
-            var e = JsonConvert.DeserializeObject<OnLastTimeBarEvent>(payload);
+            var e = JsonSerializer.Deserialize<OnLastTimeBarEvent>(payload);
             OnLastTimeBar?.Invoke(this, new Mt5TimeBarArgs(expertHandler, e.Instrument, e.Rates));
         }
 
         private void ReceivedOnLockTicksEvent(int expertHandler, string payload)
         {
-            var e = JsonConvert.DeserializeObject<OnLockTicksEvent>(payload);
+            var e = JsonSerializer.Deserialize<OnLockTicksEvent>(payload);
             OnLockTicks?.Invoke(this, new Mt5LockTicksEventArgs(e.Instrument));
         }
 
@@ -3557,12 +3561,7 @@ namespace MtApi5
         {
             if (request == null)
                 return default(T);
-
-            var serializer = JsonConvert.SerializeObject(request, Formatting.None,
-                            new JsonSerializerSettings
-                            {
-                                NullValueHandling = NullValueHandling.Ignore
-                            });
+            var serializer = JsonSerializer.Serialize(request, request.GetType(), serializeOptions);
             var commandParameters = new ArrayList { serializer };
 
             var res = SendCommand<string>(Mt5CommandType.MtRequest, commandParameters);
@@ -3573,7 +3572,7 @@ namespace MtApi5
                 throw new ExecutionException(ErrorCode.ErrCustom, "Response from MetaTrader is null");
             }
 
-            var response = JsonConvert.DeserializeObject<Response<T>>(res);
+            var response = JsonSerializer.Deserialize<Response<T>>(res);
             if (response.ErrorCode != 0)
             {
                 Log.Warn($"SendRequest: ErrorCode = {response.ErrorCode}. {response}");
