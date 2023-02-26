@@ -39,7 +39,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTApiServerStandalone", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTApiClientStandalone", "TestClients\MTApiClientStandalone\MTApiClientStandalone.csproj", "{C4E9EE08-E943-4CA3-9EEF-66F12C75C1FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MtApiServiceTest", "MtApiServiceTest\MtApiServiceTest.csproj", "{239B1691-0428-43D9-A631-3B8991284055}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MtApiServiceTest", "MtApiServiceTest\MtApiServiceTest.csproj", "{239B1691-0428-43D9-A631-3B8991284055}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5EDA9FC0-7CE3-4B4C-A51A-5CBA5C91B3B5}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
