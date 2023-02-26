@@ -61,14 +61,13 @@ namespace MTApiService
                     return false;
                 }
 
-                // currently not supported with CoreWCF
-                ////init local pipe host
-                //var localPipeUrl = CreateConnectionAddress(null, port, true);
-                //var localPipeServiceHost = CreateServiceHost(localPipeUrl, true);
-                //if (localPipeServiceHost != null)
-                //{
-                //    _hosts.Add(localPipeServiceHost);
-                //}
+                //init local pipe host
+                var localPipeUrl = CreateConnectionAddress(null, port, true);
+                var localPipeServiceHost = CreateServiceHost(localPipeUrl, true);
+                if (localPipeServiceHost != null)
+                {
+                    _hosts.Add(localPipeServiceHost);
+                }
 
                 //init localhost
                 var localUrl = CreateConnectionAddress("localhost", port, false);
@@ -78,24 +77,23 @@ namespace MTApiService
                     _hosts.Add(localServiceHost);
                 }
 
-                // currently not required for CoreWCF
-                ////init network hosts
-                //var dnsHostName = Dns.GetHostName();
-                //var ips = Dns.GetHostEntry(dnsHostName);
+                //init network hosts
+                var dnsHostName = Dns.GetHostName();
+                var ips = Dns.GetHostEntry(dnsHostName);
 
-                //foreach (var ipAddress in ips.AddressList)
-                //{
-                //    if (ipAddress?.AddressFamily == AddressFamily.InterNetwork)
-                //    {
-                //        var ip = ipAddress.ToString();
-                //        var networkUrl = CreateConnectionAddress(ip, port, false);
-                //        var serviceHost = CreateServiceHost(networkUrl, false);
-                //        if (serviceHost != null)
-                //        {
-                //            _hosts.Add(serviceHost);
-                //        }
-                //    }
-                //}
+                foreach (var ipAddress in ips.AddressList)
+                {
+                    if (ipAddress?.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        var ip = ipAddress.ToString();
+                        var networkUrl = CreateConnectionAddress(ip, port, false);
+                        var serviceHost = CreateServiceHost(networkUrl, false);
+                        if (serviceHost != null)
+                        {
+                            _hosts.Add(serviceHost);
+                        }
+                    }
+                }
 
                 count = _hosts.Count;
             }
@@ -124,7 +122,7 @@ namespace MTApiService
                 serviceHost.AddServiceEndpoint(typeof(IMtApi), binding, serverUrlAdress);
                 serviceHost.Open();
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 Log.ErrorFormat("CreateServiceHost: Error! {0}", e.Message);
                 serviceHost = null;
