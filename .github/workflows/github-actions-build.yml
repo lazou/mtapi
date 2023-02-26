@@ -14,12 +14,16 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1
+      - name: Restore nuget packages
+        run: nuget restore MTApiService\MTApiService.csproj
       - name: Build installer for release
         run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - run: echo "🍏 This job's status is ${{ job.status }}."
       
   Build-MtApiServiceNetCore:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
