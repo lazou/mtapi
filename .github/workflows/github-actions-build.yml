@@ -1,7 +1,43 @@
 name: GitHub Actions Build
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
-jobs:  
+jobs:
+  Build-Solution:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1
+      - name: Restore nuget packages
+        run: nuget restore MetaTraderApi_2017.sln
+      - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
+      - name: Build project for release
+        run: msbuild MTApiService\MTApiService.csproj MtApiServiceNetCore\MtApiServiceNetCore.csproj MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: PR artifacts
+        uses: actions/upload-artifact@v3
+        if: github.ref != 'refs/heads/master'
+        with:
+          name: MetaTraderApi
+          retention-days: 5
+          path: |
+            build\products\Release\MTApiService.dll
+            build\products\Release\MtApi5.dll
+            build\products\Release\MtApiServiceNetCore.dll
+            build\products\Release\x64\MT5Connector.dll
+      - name: Latest
+        uses: softprops/action-gh-release@v0.1.15
+        if: github.ref == 'refs/heads/master'
+        with:
+          tag_name: Latest
+          files: |
+            build\products\Release\MTApiService.dll
+            build\products\Release\MtApi5.dll
+            build\products\Release\MtApiServiceNetCore.dll
+            build\products\Release\x64\MT5Connector.dll
+
   Build-MTApiService:
     runs-on: windows-latest
     steps:
