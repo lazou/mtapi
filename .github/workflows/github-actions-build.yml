@@ -14,8 +14,12 @@ jobs:
       - name: Restore nuget packages
         run: nuget restore MetaTraderApi_2017.sln
       - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
-      - name: Build project for release
-        run: msbuild MTApiService\MTApiService.csproj MtApiServiceNetCore\MtApiServiceNetCore.csproj MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Build MTApiService for release
+        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Build MtApiServiceNetCore for release
+        run: msbuild MtApiServiceNetCore\MtApiServiceNetCore.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Build MT5Connector for release
+        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         if: github.ref != 'refs/heads/master'
