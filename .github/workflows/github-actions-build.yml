@@ -17,8 +17,8 @@ jobs:
       - name: Setup Nuget
         uses: Nuget/setup-nuget@v1
       - name: Restore nuget packages
-        run: nuget restore MTApiService\MTApiService.csproj
-      - name: Build installer for release
+        run: nuget restore MTApiService\MTApiService.csproj -PackagesDirectory
+      - name: Build project for release
         run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - run: echo "🍏 This job's status is ${{ job.status }}."
       
@@ -33,7 +33,11 @@ jobs:
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-      - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
-      - name: Build installer for release
+      - run: echo "🖥️ The workflow will now start building the MtApiServiceNetCore.dll"
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1
+      - name: Restore nuget packages
+        run: nuget restore MtApiServiceNetCore\MtApiServiceNetCore.csproj -PackagesDirectory
+      - name: Build project for release
         run: msbuild MtApiServiceNetCore\MtApiServiceNetCore.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - run: echo "🍏 This job's status is ${{ job.status }}."
