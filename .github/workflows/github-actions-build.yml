@@ -11,6 +11,12 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Setup Nuget
         uses: Nuget/setup-nuget@v1
+      - uses: actions/cache@v1
+        with:
+          path: ~/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
       - name: Restore nuget packages
         run: nuget restore MetaTraderApi_2017.sln
       - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
@@ -30,9 +36,9 @@ jobs:
             build\products\Release\MTApiService.dll
             build\products\Release\MtApi5.dll
             build\products\Release\MtApiServiceNetCore.dll
-            build\products\Release\MT5Connector.dll
-            build\products\Release\MT5Connector.lib
-            build\products\Release\MT5Connector.exp
+            MT5Connector\build\products\Release\MT5Connector.dll
+            MT5Connector\build\products\Release\MT5Connector.lib
+            MT5Connector\build\products\Release\MT5Connector.exp
       - name: Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
@@ -42,6 +48,6 @@ jobs:
             build\products\Release\MTApiService.dll
             build\products\Release\MtApi5.dll
             build\products\Release\MtApiServiceNetCore.dll
-            build\products\Release\MT5Connector.dll
-            build\products\Release\MT5Connector.lib
-            build\products\Release\MT5Connector.exp
+            MT5Connector\build\products\Release\MT5Connector.dll
+            MT5Connector\build\products\Release\MT5Connector.lib
+            MT5Connector\build\products\Release\MT5Connector.exp
