@@ -1,5 +1,5 @@
 name: GitHub Actions Build
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: Building & uploading projects
 on: [push]
 jobs:
   Build-Solution:
@@ -16,8 +16,8 @@ jobs:
       - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
       - name: Build MTApiService for release
         run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
-      - name: Build MtApiServiceNetCore for release
-        run: msbuild MtApiServiceNetCore\MtApiServiceNetCore.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Build MtApi5 for release
+        run: msbuild MtApi5\MtApi5.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Build MT5Connector for release
         run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: PR artifacts
@@ -30,9 +30,11 @@ jobs:
             build\products\Release\MTApiService.dll
             build\products\Release\MtApi5.dll
             build\products\Release\MtApiServiceNetCore.dll
-            build\products\Release\x64\MT5Connector.dll
+            build\products\Release\MT5Connector.dll
+            build\products\Release\MT5Connector.lib
+            build\products\Release\MT5Connector.exp
       - name: Latest
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           tag_name: Latest
@@ -40,36 +42,6 @@ jobs:
             build\products\Release\MTApiService.dll
             build\products\Release\MtApi5.dll
             build\products\Release\MtApiServiceNetCore.dll
-            build\products\Release\x64\MT5Connector.dll
-
-  Build-MTApiService:
-    runs-on: windows-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-      - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1
-      - name: Restore nuget packages
-        run: nuget restore MetaTraderApi_2017.sln
-      - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
-      - name: Build project for release
-        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-      
-  Build-MtApiServiceNetCore:
-    runs-on: windows-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-      - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1
-      - name: Restore nuget packages
-        run: nuget restore MetaTraderApi_2017.sln
-      - run: echo "🖥️ The workflow will now start building the MtApiServiceNetCore.dll"
-      - name: Build project for release
-        run: msbuild MtApiServiceNetCore\MtApiServiceNetCore.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+            build\products\Release\MT5Connector.dll
+            build\products\Release\MT5Connector.lib
+            build\products\Release\MT5Connector.exp
