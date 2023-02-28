@@ -29,7 +29,9 @@ jobs:
       - name: Build MtApi5 for release
         run: dotnet build MtApi5\MtApi5.csproj -c Release
       - name: Build MT5Connector for release
-        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release
+        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release        
+      - name: Build MTApiService for release
+        run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         if: github.ref != 'refs/heads/master'
@@ -55,27 +57,3 @@ jobs:
             build\products\Release\MT5Connector.dll
             build\products\Release\MT5Connector.lib
             build\products\Release\MT5Connector.exp
-  Build-Installer:
-    runs-on: windows-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-      - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1      
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-            dotnet-version: '5.0.x'
-      - uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-      - name: Restore nuget packages
-        run: nuget restore MetaTraderApi_2017.sln
-      - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
-      - name: Build MTApiService for release
-        run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
