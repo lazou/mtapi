@@ -55,3 +55,27 @@ jobs:
             MT5Connector\build\products\Release\MT5Connector.dll
             MT5Connector\build\products\Release\MT5Connector.lib
             MT5Connector\build\products\Release\MT5Connector.exp
+  Build-Solution2:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+            dotnet-version: '5.0.x'
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore nuget packages
+        run: nuget restore MetaTraderApi_2017.sln
+      - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
+      - name: Build MTApiService for release
+        run: msbuild MetaTraderApi_2017.sln -t:rebuild -verbosity:diag -property:Configuration=Release
