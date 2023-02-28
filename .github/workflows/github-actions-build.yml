@@ -10,11 +10,15 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1
-      - uses: actions/cache@v1
+        uses: Nuget/setup-nuget@v1      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
         with:
-          path: ~/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+            dotnet-version: '5.0.x'
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
       - name: Restore nuget packages
@@ -23,7 +27,7 @@ jobs:
       - name: Build MTApiService for release
         run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Build MtApi5 for release
-        run: msbuild MtApi5\MtApi5.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+        run: dotnet build MtApi5\MtApi5.csproj -c Release
       - name: Build MT5Connector for release
         run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: PR artifacts
