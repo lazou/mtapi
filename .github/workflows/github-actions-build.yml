@@ -30,7 +30,7 @@ jobs:
         run: dotnet build MtApi5\MtApi5.csproj -c Release
       - name: Build MT5Connector for release
         run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release        
-      - name: Build MTApiService for release
+      - name: Build Installer for release
         run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: PR artifacts
         uses: actions/upload-artifact@v3
@@ -45,6 +45,11 @@ jobs:
             build\products\Release\MT5Connector.dll
             build\products\Release\MT5Connector.lib
             build\products\Release\MT5Connector.exp
+            mq5\hash.mqh
+            mq5\json.mqh
+            mq5\MtApi5.ex5
+            mq5\MtApi5.mq5
+            build\installers\Release\MtApi5Installer_x86.msi
       - name: Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
@@ -57,3 +62,8 @@ jobs:
             build\products\Release\MT5Connector.dll
             build\products\Release\MT5Connector.lib
             build\products\Release\MT5Connector.exp
+            mq5\hash.mqh
+            mq5\json.mqh
+            mq5\MtApi5.ex5
+            mq5\MtApi5.mq5
+            build\installers\Release\MtApi5Installer_x86.msi
