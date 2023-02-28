@@ -3,7 +3,7 @@
     <?define ProductName="MtApi5" ?>
 
     <?if $(var.Platform) = x64 ?>
-        <?define ProductPathNative="..\build\products\$(var.Configuration)\x64\"?>
+        <?define ProductPathNative="..\build\products\$(var.Configuration)\"?>
         <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
         <?define PlatformSystemFolder = "System64Folder" ?>    
     <?else ?>
@@ -80,11 +80,6 @@
                 </RegistryKey>
 
             </Component>
-			
-			<Component Id="NewtonsoftJsondll" Directory="INSTALLFOLDER">
-				<File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" KeyPath="yes"
-                    src="$(var.ProductPath)Newtonsoft.Json.dll"/>
-			</Component>
 
             <Component Id="MtApiServiceNetCoreDll" Directory="INSTALLFOLDER">
                 <File Id="GAC_MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
