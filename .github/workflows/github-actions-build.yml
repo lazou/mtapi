@@ -40,9 +40,9 @@ jobs:
             build\products\Release\MTApiService.dll
             build\products\Release\MtApi5.dll
             build\products\Release\MtApiServiceNetCore.dll
-            MT5Connector\build\products\Release\MT5Connector.dll
-            MT5Connector\build\products\Release\MT5Connector.lib
-            MT5Connector\build\products\Release\MT5Connector.exp
+            build\products\Release\MT5Connector.dll
+            build\products\Release\MT5Connector.lib
+            build\products\Release\MT5Connector.exp
       - name: Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
@@ -52,9 +52,9 @@ jobs:
             build\products\Release\MTApiService.dll
             build\products\Release\MtApi5.dll
             build\products\Release\MtApiServiceNetCore.dll
-            MT5Connector\build\products\Release\MT5Connector.dll
-            MT5Connector\build\products\Release\MT5Connector.lib
-            MT5Connector\build\products\Release\MT5Connector.exp
+            build\products\Release\MT5Connector.dll
+            build\products\Release\MT5Connector.lib
+            build\products\Release\MT5Connector.exp
   Build-Installer:
     runs-on: windows-latest
     steps:
