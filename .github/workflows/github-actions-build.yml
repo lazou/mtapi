@@ -32,6 +32,21 @@ jobs:
         run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release        
       - name: Build Installer for release
         run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Prepair target file structure
+        run: |
+          mkdir portable
+          mkdir client
+          move "build\products\Release\MTApiService.dll" "portable\MTApiService.dll"
+          move "build\products\Release\MT5Connector.dll" "portable\MQL5\Libraries\MTApiService.dll"
+          move "build\products\Release\MT5Connector.lib" "portable\MQL5\Libraries\MT5Connector.lib"
+          move "build\products\Release\MT5Connector.exp" "portable\MQL5\Libraries\MT5Connector.exp"
+          move "mq5\MtApi5.ex5" "portable\MQL5\Experts\MtApi5.ex5"
+          move "mq5\MtApi5.mq5" "portable\MQL5\Experts\MtApi5.mq5"
+          move "mq5\hash.mqh" "portable\MQL5\Include\hash.mqh"
+          move "mq5\json.mqh" "portable\MQL5\Include\json.mqh"
+          move "build\products\Release\MtApi5.dll" "client\MtApi5.dll"
+          move "build\products\Release\MtApiServiceNetCore.dll" "client\MtApiServiceNetCore.dll"
+          move "build\installers\Release\MtApi5Installer_x86.msi" "MtApi5Installer_x86.msi"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         if: github.ref != 'refs/heads/master'
@@ -39,31 +54,31 @@ jobs:
           name: MetaTraderApi
           retention-days: 5
           path: |
-            build\products\Release\MTApiService.dll
-            build\products\Release\MtApi5.dll
-            build\products\Release\MtApiServiceNetCore.dll
-            build\products\Release\MT5Connector.dll
-            build\products\Release\MT5Connector.lib
-            build\products\Release\MT5Connector.exp
-            mq5\hash.mqh
-            mq5\json.mqh
-            mq5\MtApi5.ex5
-            mq5\MtApi5.mq5
-            build\installers\Release\MtApi5Installer_x86.msi
+            "portable\MTApiService.dll"
+            "portable\MQL5\Libraries\MTApiService.dll"
+            "portable\MQL5\Libraries\MT5Connector.lib"
+            "portable\MQL5\Libraries\MT5Connector.exp"
+            "portable\MQL5\Experts\MtApi5.ex5"
+            "portable\MQL5\Experts\MtApi5.mq5"
+            "portable\MQL5\Include\hash.mqh"
+            "portable\MQL5\Include\json.mqh"
+            "client\MtApi5.dll"
+            "client\MtApiServiceNetCore.dll"
+            "MtApi5Installer_x86.msi"
       - name: Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           tag_name: Latest
           files: |
-            build\products\Release\MTApiService.dll
-            build\products\Release\MtApi5.dll
-            build\products\Release\MtApiServiceNetCore.dll
-            build\products\Release\MT5Connector.dll
-            build\products\Release\MT5Connector.lib
-            build\products\Release\MT5Connector.exp
-            mq5\hash.mqh
-            mq5\json.mqh
-            mq5\MtApi5.ex5
-            mq5\MtApi5.mq5
-            build\installers\Release\MtApi5Installer_x86.msi
+            "portable\MTApiService.dll"
+            "portable\MQL5\Libraries\MTApiService.dll"
+            "portable\MQL5\Libraries\MT5Connector.lib"
+            "portable\MQL5\Libraries\MT5Connector.exp"
+            "portable\MQL5\Experts\MtApi5.ex5"
+            "portable\MQL5\Experts\MtApi5.mq5"
+            "portable\MQL5\Include\hash.mqh"
+            "portable\MQL5\Include\json.mqh"
+            "client\MtApi5.dll"
+            "client\MtApiServiceNetCore.dll"
+            "MtApi5Installer_x86.msi"
