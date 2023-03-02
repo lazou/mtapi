@@ -53,7 +53,7 @@ jobs:
           move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\portable\MQL5\Include\json.mqh"
           move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\client\MtApi5.dll"
           move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\client\MtApiServiceNetCore.dll"
-          move "${{ env.BUILD_DIR }}\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\MtApi5Installer_x86.msi"
+          move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\MtApi5Installer_x86.msi"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         if: github.ref != 'refs/heads/master'
