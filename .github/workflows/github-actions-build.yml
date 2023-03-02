@@ -39,6 +39,7 @@ jobs:
         run: |
           mkdir ${{ env.WORK_DIR }}\portable
           mkdir ${{ env.WORK_DIR }}\portable\MQL5
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Libraries
           mkdir ${{ env.WORK_DIR }}\portable\MQL5\Experts
           mkdir ${{ env.WORK_DIR }}\portable\MQL5\Include
           mkdir ${{ env.WORK_DIR }}\client
