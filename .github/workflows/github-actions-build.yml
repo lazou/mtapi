@@ -6,10 +6,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 
+      - env:
+          WORK_DIR: $GITHUB_WORKSPACE
+          BUILD_DIR: $GITHUB_WORKSPACE\build\products\Release      
       - run: |
-          echo ${{ github.workspace }}
           echo $GITHUB_WORKSPACE
+          echo $WORK_DIR
+          echo $BUILD_DIR
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Setup Nuget
@@ -37,19 +41,22 @@ jobs:
         run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Prepair target file structure
         run: |
-          mkdir ${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable
-          mkdir ${GITHUB_WORKSPACE}\a\mtapi\mtapi\client
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\products\Release\MTApiService.dll" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MTApiService.dll"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\products\Release\MT5Connector.dll" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Libraries\MTApiService.dll"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\products\Release\MT5Connector.lib" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Libraries\MT5Connector.lib"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\products\Release\MT5Connector.exp" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Libraries\MT5Connector.exp"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\mq5\MtApi5.ex5" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Experts\MtApi5.ex5"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\mq5\MtApi5.mq5" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Experts\MtApi5.mq5"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\mq5\hash.mqh" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Include\hash.mqh"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\mq5\json.mqh" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\portable\MQL5\Include\json.mqh"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\products\Release\MtApi5.dll" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\client\MtApi5.dll"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\products\Release\MtApiServiceNetCore.dll" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\client\MtApiServiceNetCore.dll"
-          move "${GITHUB_WORKSPACE}\a\mtapi\mtapi\build\installers\Release\MtApi5Installer_x86.msi" "${GITHUB_WORKSPACE}\a\mtapi\mtapi\MtApi5Installer_x86.msi"
+          mkdir ${WORK_DIR}\portable
+          mkdir ${WORK_DIR}\portable\MQL5
+          mkdir ${WORK_DIR}\portable\MQL5\Experts
+          mkdir ${WORK_DIR}\portable\MQL5\Include
+          mkdir ${WORK_DIR}\client
+          move "${BUILD_DIR}\MTApiService.dll" "${WORK_DIR}\portable\MTApiService.dll"
+          move "${BUILD_DIR}\MT5Connector.dll" "${WORK_DIR}\portable\MQL5\Libraries\MTApiService.dll"
+          move "${BUILD_DIR}\MT5Connector.lib" "${WORK_DIR}\portable\MQL5\Libraries\MT5Connector.lib"
+          move "${BUILD_DIR}\MT5Connector.exp" "${WORK_DIR}\portable\MQL5\Libraries\MT5Connector.exp"
+          move "${WORK_DIR}\mq5\MtApi5.ex5" "${WORK_DIR}\portable\MQL5\Experts\MtApi5.ex5"
+          move "${WORK_DIR}\mq5\MtApi5.mq5" "${WORK_DIR}\portable\MQL5\Experts\MtApi5.mq5"
+          move "${WORK_DIR}\mq5\hash.mqh" "${WORK_DIR}\portable\MQL5\Include\hash.mqh"
+          move "${WORK_DIR}\mq5\json.mqh" "${WORK_DIR}\portable\MQL5\Include\json.mqh"
+          move "${BUILD_DIR}\MtApi5.dll" "${WORK_DIR}\client\MtApi5.dll"
+          move "${BUILD_DIR}\MtApiServiceNetCore.dll" "${WORK_DIR}\client\MtApiServiceNetCore.dll"
+          move "${BUILD_DIR}\MtApi5Installer_x86.msi" "${WORK_DIR}\MtApi5Installer_x86.msi"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         if: github.ref != 'refs/heads/master'
