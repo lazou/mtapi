@@ -7,6 +7,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      - run: |
+          echo ${{ github.workspace }}
+          echo $GITHUB_WORKSPACE
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Setup Nuget
