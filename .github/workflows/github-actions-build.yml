@@ -7,14 +7,6 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3 
-      - run: |
-          echo ${{ github.workspace }}
-        env:
-          WORK_DIR: ${{ github.workspace }}
-          BUILD_DIR: ${{ github.workspace }}\build\products\Release      
-      - run: |
-          echo ${{ env.WORK_DIR }}
-          echo ${{ env.BUILD_DIR }}
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Setup Nuget
@@ -42,8 +34,8 @@ jobs:
         run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Prepair target file structure
         env:
-          WORK_DIR: $GITHUB_WORKSPACE
-          BUILD_DIR: $GITHUB_WORKSPACE\build\products\Release
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release 
         run: |
           mkdir ${{ env.WORK_DIR }}\portable
           mkdir ${{ env.WORK_DIR }}\portable\MQL5
