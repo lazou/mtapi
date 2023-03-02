@@ -8,13 +8,13 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3 
       - run: |
-          echo $GITHUB_WORKSPACE
+          echo ${{ github.workspace }}
         env:
-          WORK_DIR: $GITHUB_WORKSPACE
-          BUILD_DIR: $GITHUB_WORKSPACE\build\products\Release      
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release      
       - run: |
-          echo $WORK_DIR
-          echo $BUILD_DIR
+          echo ${{ env.WORK_DIR }}
+          echo ${{ env.BUILD_DIR }}
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Setup Nuget
@@ -41,13 +41,16 @@ jobs:
       - name: Build Installer for release
         run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Prepair target file structure
+        env:
+          WORK_DIR: $GITHUB_WORKSPACE
+          BUILD_DIR: $GITHUB_WORKSPACE\build\products\Release
         run: |
-          mkdir ${WORK_DIR}\portable
-          mkdir ${WORK_DIR}\portable\MQL5
-          mkdir ${WORK_DIR}\portable\MQL5\Experts
-          mkdir ${WORK_DIR}\portable\MQL5\Include
-          mkdir ${WORK_DIR}\client
-          move "${BUILD_DIR}\MTApiService.dll" "${WORK_DIR}\portable\MTApiService.dll"
+          mkdir ${{ env.WORK_DIR }}\portable
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Experts
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Include
+          mkdir ${{ env.WORK_DIR }}\client
+          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\portable\MTApiService.dll"
           move "${BUILD_DIR}\MT5Connector.dll" "${WORK_DIR}\portable\MQL5\Libraries\MTApiService.dll"
           move "${BUILD_DIR}\MT5Connector.lib" "${WORK_DIR}\portable\MQL5\Libraries\MT5Connector.lib"
           move "${BUILD_DIR}\MT5Connector.exp" "${WORK_DIR}\portable\MQL5\Libraries\MT5Connector.exp"
