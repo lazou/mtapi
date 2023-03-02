@@ -43,7 +43,7 @@ jobs:
           mkdir ${{ env.WORK_DIR }}\portable\MQL5\Include
           mkdir ${{ env.WORK_DIR }}\client
           move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\portable\MTApiService.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MTApiService.dll"
+          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.dll"
           move "${{ env.BUILD_DIR }}\MT5Connector.lib" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.lib"
           move "${{ env.BUILD_DIR }}\MT5Connector.exp" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.exp"
           move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.ex5"
