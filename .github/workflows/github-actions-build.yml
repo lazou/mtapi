@@ -56,22 +56,25 @@ jobs:
           move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\MtApi5Installer_x86.msi"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
+        env:
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release 
         if: github.ref != 'refs/heads/master'
         with:
           name: MetaTraderApi
           retention-days: 5
           path: |
-            "portable\MTApiService.dll"
-            "portable\MQL5\Libraries\MT5Connector.dll"
-            "portable\MQL5\Libraries\MT5Connector.lib"
-            "portable\MQL5\Libraries\MT5Connector.exp"
-            "portable\MQL5\Experts\MtApi5.ex5"
-            "portable\MQL5\Experts\MtApi5.mq5"
-            "portable\MQL5\Include\hash.mqh"
-            "portable\MQL5\Include\json.mqh"
-            "client\MtApi5.dll"
-            "client\MtApiServiceNetCore.dll"
-            "MtApi5Installer_x86.msi"
+            "${{ env.WORK_DIR }}\portable\MTApiService.dll"
+            "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.dll"
+            "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.lib"
+            "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.exp"
+            "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.ex5"
+            "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.mq5"
+            "${{ env.WORK_DIR }}\portable\MQL5\Include\hash.mqh"
+            "${{ env.WORK_DIR }}\portable\MQL5\Include\json.mqh"
+            "${{ env.WORK_DIR }}\client\MtApi5.dll"
+            "${{ env.WORK_DIR }}\client\MtApiServiceNetCore.dll"
+            "${{ env.WORK_DIR }}\MtApi5Installer_x86.msi"
       - name: Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
