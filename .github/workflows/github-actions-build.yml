@@ -62,7 +62,7 @@ jobs:
           retention-days: 5
           path: |
             "portable\MTApiService.dll"
-            "portable\MQL5\Libraries\MTApiService.dll"
+            "portable\MQL5\Libraries\MT5Connector.dll"
             "portable\MQL5\Libraries\MT5Connector.lib"
             "portable\MQL5\Libraries\MT5Connector.exp"
             "portable\MQL5\Experts\MtApi5.ex5"
@@ -79,7 +79,7 @@ jobs:
           tag_name: Latest
           files: |
             "portable\MTApiService.dll"
-            "portable\MQL5\Libraries\MTApiService.dll"
+            "portable\MQL5\Libraries\MT5Connector.dll"
             "portable\MQL5\Libraries\MT5Connector.lib"
             "portable\MQL5\Libraries\MT5Connector.exp"
             "portable\MQL5\Experts\MtApi5.ex5"
