@@ -62,8 +62,8 @@ jobs:
         with:
           name: MetaTraderApi
           retention-days: 5
+            #"${{ env.WORK_DIR }}\portable\MTApiService.dll"
           path: |
-            "${{ env.WORK_DIR }}\portable\MTApiService.dll"
             "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.dll"
             "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.lib"
             "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.exp"
