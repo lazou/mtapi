@@ -23,7 +23,6 @@ jobs:
             ${{ runner.os }}-nuget-
       - name: Restore nuget packages
         run: nuget restore MetaTraderApi_2017.sln
-      - run: echo "🖥️ The workflow will now start building the MTApiService.dll"
       - name: Build MTApiService for release
         run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Build MtApi5 for release
