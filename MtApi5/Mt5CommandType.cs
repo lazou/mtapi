@@ -81,6 +81,8 @@ namespace MtApi5
         CopySpread                          = 49,
         CopySpread1                         = 1049,
         CopySpread2                         = 1149,
+        iOpen                               = 500,
+        iClose                              = 501,
 
         //Market Information
         SymbolsTotal                        = 50,
