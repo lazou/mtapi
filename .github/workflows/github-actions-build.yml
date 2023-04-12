@@ -73,11 +73,11 @@ jobs:
         id: download
         with:
           name: MetaTraderApi
-          path: ${{ env.WORK_DIR }}\download
+          path: download
       - name: Echo download path
         run: |
           echo ${{steps.download.outputs.download-path}}
-          ls -la ${{steps.download.outputs.download-path}}
+          ls ${{steps.download.outputs.download-path}}
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
