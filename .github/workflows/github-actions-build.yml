@@ -68,13 +68,17 @@ jobs:
             ${{ env.WORK_DIR }}\client\
             ${{ env.WORK_DIR }}\installers\
           if-no-files-found: error
-      - uses: actions/download-artifact@v3
+      - name: Download PR artifacts
+        uses: actions/download-artifact@v3
         id: download
         with:
           name: MetaTraderApi
-      - name: 'Echo download path'
-        run: echo ${{steps.download.outputs.download-path}}
-      - name: Latest
+          path: ${{ env.WORK_DIR }}\download
+      - name: Echo download path
+        run: |
+          echo ${{steps.download.outputs.download-path}}
+          ls -la ${{steps.download.outputs.download-path}}
+      - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
