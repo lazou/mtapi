@@ -1,6 +1,12 @@
 name: GitHub Actions Build
 run-name: Building & uploading projects
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
   Build-Solution:
     runs-on: windows-latest
