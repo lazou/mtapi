@@ -59,7 +59,7 @@ jobs:
         env:
           WORK_DIR: ${{ github.workspace }}
           BUILD_DIR: ${{ github.workspace }}\build\products\Release 
-        if: github.ref != 'refs/heads/master'
+        #if: github.ref != 'refs/heads/master'
         with:
           name: MetaTraderApi
           retention-days: 5
@@ -68,20 +68,16 @@ jobs:
             ${{ env.WORK_DIR }}\client\
             ${{ env.WORK_DIR }}\installers\
           if-no-files-found: error
+      - uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: MetaTraderApi
+      - name: 'Echo download path'
+        run: echo ${{steps.download.outputs.download-path}}
       - name: Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           tag_name: Latest
           files: |
-            "portable\MTApiService.dll"
-            "portable\MQL5\Libraries\MT5Connector.dll"
-            "portable\MQL5\Libraries\MT5Connector.lib"
-            "portable\MQL5\Libraries\MT5Connector.exp"
-            "portable\MQL5\Experts\MtApi5.ex5"
-            "portable\MQL5\Experts\MtApi5.mq5"
-            "portable\MQL5\Include\hash.mqh"
-            "portable\MQL5\Include\json.mqh"
-            "client\MtApi5.dll"
-            "client\MtApiServiceNetCore.dll"
-            "MtApi5Installer_x86.msi"
+            ${{steps.download.outputs.download-path}}
