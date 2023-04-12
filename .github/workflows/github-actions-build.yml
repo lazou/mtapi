@@ -1,0 +1,93 @@
+name: GitHub Actions Build
+run-name: Building & uploading projects
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  Build-Solution:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+            dotnet-version: '5.0.x'
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore nuget packages
+        run: nuget restore MetaTraderApi_2017.sln
+      - name: Build MTApiService for release
+        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Build MtApi5 for release
+        run: dotnet build MtApi5\MtApi5.csproj -c Release
+      - name: Build MT5Connector for release
+        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release        
+      - name: Build Installer for release
+        run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Prepair target file structure
+        env:
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release 
+        run: |
+          mkdir ${{ env.WORK_DIR }}\portable
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Libraries
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Experts
+          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Include
+          mkdir ${{ env.WORK_DIR }}\client
+          mkdir ${{ env.WORK_DIR }}\installers
+          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\portable\MTApiService.dll"
+          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.dll"
+          move "${{ env.BUILD_DIR }}\MT5Connector.lib" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.lib"
+          move "${{ env.BUILD_DIR }}\MT5Connector.exp" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.exp"
+          move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.ex5"
+          move "${{ env.WORK_DIR }}\mq5\MtApi5.mq5" "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.mq5"
+          move "${{ env.WORK_DIR }}\mq5\hash.mqh" "${{ env.WORK_DIR }}\portable\MQL5\Include\hash.mqh"
+          move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\portable\MQL5\Include\json.mqh"
+          move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\client\MtApi5.dll"
+          move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\client\MtApiServiceNetCore.dll"
+          move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\installers\MtApi5Installer_x86.msi"
+      - name: PR artifacts
+        uses: actions/upload-artifact@v3
+        env:
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release 
+        #if: github.ref != 'refs/heads/master'
+        with:
+          name: MetaTraderApi
+          retention-days: 5
+          path: |
+            ${{ env.WORK_DIR }}\portable\
+            ${{ env.WORK_DIR }}\client\
+            ${{ env.WORK_DIR }}\installers\
+          if-no-files-found: error
+      - name: Download PR artifacts
+        uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: MetaTraderApi
+          path: download
+      - name: Echo download path
+        run: |
+          echo ${{steps.download.outputs.download-path}}
+          ls ${{steps.download.outputs.download-path}}
+      - name: Release to Latest
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          tag_name: Latest
+          files: |
+            ${{steps.download.outputs.download-path}}
