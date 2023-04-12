@@ -64,9 +64,9 @@ jobs:
           name: MetaTraderApi
           retention-days: 5
           path: |
-            "${{ env.WORK_DIR }}\portable\"
-            "${{ env.WORK_DIR }}\client\"
-            "${{ env.WORK_DIR }}\installers\"
+            ${{ env.WORK_DIR }}\portable\
+            ${{ env.WORK_DIR }}\client\
+            ${{ env.WORK_DIR }}\installers\
           if-no-files-found: error
       - name: Latest
         uses: softprops/action-gh-release@v1
