@@ -42,24 +42,26 @@ jobs:
           WORK_DIR: ${{ github.workspace }}
           BUILD_DIR: ${{ github.workspace }}\build\products\Release 
         run: |
-          mkdir ${{ env.WORK_DIR }}\portable
-          mkdir ${{ env.WORK_DIR }}\portable\MQL5
-          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Libraries
-          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Experts
-          mkdir ${{ env.WORK_DIR }}\portable\MQL5\Include
-          mkdir ${{ env.WORK_DIR }}\client
-          mkdir ${{ env.WORK_DIR }}\installers
-          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\portable\MTApiService.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.lib" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.lib"
-          move "${{ env.BUILD_DIR }}\MT5Connector.exp" "${{ env.WORK_DIR }}\portable\MQL5\Libraries\MT5Connector.exp"
-          move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.ex5"
-          move "${{ env.WORK_DIR }}\mq5\MtApi5.mq5" "${{ env.WORK_DIR }}\portable\MQL5\Experts\MtApi5.mq5"
-          move "${{ env.WORK_DIR }}\mq5\hash.mqh" "${{ env.WORK_DIR }}\portable\MQL5\Include\hash.mqh"
-          move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\portable\MQL5\Include\json.mqh"
-          move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\client\MtApi5.dll"
-          move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\client\MtApiServiceNetCore.dll"
-          move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\installers\MtApi5Installer_x86.msi"
+          mkdir ${{ env.WORK_DIR }}\artifacts
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include
+          mkdir ${{ env.WORK_DIR }}\artifacts\client
+          mkdir ${{ env.WORK_DIR }}\artifacts\installers
+          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\artifacts\portable\MTApiService.dll"
+          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.dll"
+          move "${{ env.BUILD_DIR }}\MT5Connector.lib" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.lib"
+          move "${{ env.BUILD_DIR }}\MT5Connector.exp" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.exp"
+          move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.ex5"
+          move "${{ env.WORK_DIR }}\mq5\MtApi5.mq5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.mq5"
+          move "${{ env.WORK_DIR }}\mq5\hash.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\hash.mqh"
+          move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\json.mqh"
+          move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApi5.dll"
+          move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
+          move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\artifacts\installers\MtApi5Installer_x86.msi"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         env:
@@ -69,25 +71,17 @@ jobs:
         with:
           name: MetaTraderApi
           retention-days: 5
-          path: |
-            ${{ env.WORK_DIR }}\portable\
-            ${{ env.WORK_DIR }}\client\
-            ${{ env.WORK_DIR }}\installers\
+          path: ${{ env.WORK_DIR }}\artifacts\
           if-no-files-found: error
-      - name: Download PR artifacts
-        uses: actions/download-artifact@v3
-        id: download
+      - name: Zip artifacts
+        uses: montudor/action-zip@v1
+        env:
+          WORK_DIR: ${{ github.workspace }}
         with:
-          name: MetaTraderApi
-          path: download
-      - name: Echo download path
-        run: |
-          echo ${{steps.download.outputs.download-path}}
-          ls ${{steps.download.outputs.download-path}}
+          args: zip -qq -r ${{ env.WORK_DIR }}\MetaTraderApi.zip ${{ env.WORK_DIR }}\artifacts
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           tag_name: Latest
-          files: |
-            ${{steps.download.outputs.download-path}}
+          files: ${{ env.WORK_DIR }}\MetaTraderApi.zip
