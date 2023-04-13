@@ -30,11 +30,11 @@ jobs:
       - name: Restore nuget packages
         run: nuget restore MetaTraderApi_2017.sln
       - name: Build MTApiService for release
-        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release /property:Platform=x64
+        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Build MtApi5 for release
-        run: dotnet build MtApi5\MtApi5.csproj -c Release -r win-x64
+        run: dotnet build MtApi5\MtApi5.csproj -c Release
       - name: Build MT5Connector for release
-        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release /property:Platform=x64      
+        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release      
       - name: Build Installer for release
         run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release /property:Platform=x64
       - name: Prepair target file structure
