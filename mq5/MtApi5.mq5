@@ -1,7 +1,7 @@
 #property copyright "Vyacheslav Demidyuk"
 #property link      ""
 
-#property version   "1.9"
+#property version   "1.0.36.0"
 #property description "MtApi (MT5) connection expert"
 
 #include <json.mqh>
