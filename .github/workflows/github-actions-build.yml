@@ -72,10 +72,12 @@ jobs:
           retention-days: 5
           path: ${{ env.WORK_DIR }}\artifacts\
           if-no-files-found: error
-      - name: Zip artifacts
+      - name: Zip artifacts for release
         env:
           WORK_DIR: ${{ github.workspace }}
-        run: Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi
+        run: |
+          Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts\* -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi.zip
+          dir ${{ env.WORK_DIR }}          
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
