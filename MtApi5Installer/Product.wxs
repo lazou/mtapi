@@ -74,8 +74,7 @@
                     Source="$(var.ProductPath)MtApi5.dll" />
 
                 <RegistryKey Root="HKLM"
-                    Key="Software\Microsoft\.NetFramework\v4.0.30319\AssemblyFoldersEx\$(var.ProductName)"
-                    Action="createAndRemoveOnUninstall">
+                    Key="Software\Microsoft\.NetFramework\v4.0.30319\AssemblyFoldersEx\$(var.ProductName)">
 					<RegistryValue Type="string" Value="[INSTALLFOLDER]"/>
                 </RegistryKey>
 
@@ -83,7 +82,7 @@
 
             <Component Id="MtApiServiceNetCoreDll" Directory="INSTALLFOLDER">
                 <File Id="GAC_MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
-                    src="$(var.ProductPath)MtApiServiceNetCore.dll"/>
+                    Source="$(var.ProductPath)MtApiServiceNetCore.dll"/>
             </Component>
 
             <Component Id="MtApi5Expert" Directory="ExpertFolder">
@@ -102,8 +101,7 @@
 
             <Component Id="ConnectionProfileRegistryKey" Guid="*" Directory="INSTALLFOLDER">
                 <RegistryKey Root="HKCU"
-                             Key="Software\MtApi\ConnectionProfiles\Local"
-                      Action="createAndRemoveOnUninstall">
+                             Key="Software\MtApi\ConnectionProfiles\Local">
                     <RegistryValue Type="string" Name="Host" Value=""/>
                     <RegistryValue Type="integer" Name="Port" Value="8222" KeyPath="yes"/>
                 </RegistryKey>
@@ -111,7 +109,7 @@
 
             <Component Id="MTApiServiceDllGAC" Guid="6CD24D64-7DA1-4015-A5B3-B17C2488998C" Directory="GAC">
                 <File Id="MTApiService.dll" Name="MTApiService.dll" KeyPath="yes"
-                    src="$(var.ProductPath)MTApiService.dll" Checksum="yes"
+                    Source="$(var.ProductPath)MTApiService.dll" Checksum="yes"
                     Assembly=".net" AssemblyManifest="MTApiService.dll" Vital="yes" />
             </Component>
 
