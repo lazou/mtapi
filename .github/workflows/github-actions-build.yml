@@ -73,11 +73,9 @@ jobs:
           path: ${{ env.WORK_DIR }}\artifacts\
           if-no-files-found: error
       - name: Zip artifacts
-        uses: montudor/action-zip@v1
         env:
           WORK_DIR: ${{ github.workspace }}
-        with:
-          args: zip -qq -r ${{ env.WORK_DIR }}\MetaTraderApi.zip ${{ env.WORK_DIR }}\artifacts
+        run: Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
