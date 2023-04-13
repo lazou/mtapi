@@ -44,7 +44,6 @@ jobs:
         run: |
           mkdir ${{ env.WORK_DIR }}\artifacts
           mkdir ${{ env.WORK_DIR }}\artifacts\portable
-          mkdir ${{ env.WORK_DIR }}\artifacts\portable
           mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5
           mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries
           mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts
