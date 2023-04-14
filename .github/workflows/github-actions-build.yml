@@ -34,9 +34,9 @@ jobs:
       - name: Build MtApi5 for release
         run: dotnet build MtApi5\MtApi5.csproj -c Release
       - name: Build MT5Connector for release
-        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release        
+        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release      
       - name: Build Installer for release
-        run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
+        run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release /property:Platform=x64
       - name: Prepair target file structure
         env:
           WORK_DIR: ${{ github.workspace }}
@@ -60,7 +60,7 @@ jobs:
           move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\json.mqh"
           move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApi5.dll"
           move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
-          move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\artifacts\installers\MtApi5Installer_x86.msi"
+          move "${{ env.WORK_DIR }}\build\installers\Release\*.msi" "${{ env.WORK_DIR }}\artifacts\installers\"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         env:
@@ -77,10 +77,17 @@ jobs:
         env:
           WORK_DIR: ${{ github.workspace }}
         run: |
-          Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts\* -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi.zip
+          Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts\* -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi.zip      
+      - name: Get Release text
+        id: release_log
+        run: 
+          echo "::set-output name=LOG::$(
+             git log HEAD --pretty=format:"%h %s" -n 1
+          )"      
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           tag_name: Latest
+          body: ${{ steps.release_log.outputs.LOG }}
           files: ${{ env.WORK_DIR }}\MetaTraderApi.zip
