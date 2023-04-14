@@ -526,7 +526,13 @@ int executeCommand()
    break;      
    case 1149: //CopySpread2
       Execute_CopySpread2();
-   break;       
+   break;
+   case 500: //iOpen
+      Execute_iOpen();
+   break;
+   case 501: //iClose
+      Execute_iClose();
+   break;
    case 50: //SymbolsTotal
       Execute_SymbolsTotal();
    break;     
@@ -3021,6 +3027,70 @@ void Execute_CopySpread2()
    if (!sendIntArrayResponse(ExpertHandle, spread_array, copied, _response_error))
    {
       PrintResponseError("CopySpread", _response_error);
+   }
+}
+
+void Execute_iOpen()
+{
+   string symbol;
+   int timeframe;
+   int shift;
+   StringInit(symbol, 100, 0);
+   
+   if (!getStringValue(ExpertHandle, 0, symbol, _error))
+   {
+      PrintParamError("iOpen", "symbol", _error);
+      sendErrorResponse(ExpertHandle, -1, _error, _response_error);
+      return;
+   }
+   if (!getIntValue(ExpertHandle, 1, timeframe, _error))
+   {
+      PrintParamError("iOpen", "timeframe", _error);
+      sendErrorResponse(ExpertHandle, -1, _error, _response_error);
+      return;
+   }
+   if (!getIntValue(ExpertHandle,2, shift, _error))
+   {
+      PrintParamError("iOpen", "shift", _error);
+      sendErrorResponse(ExpertHandle, -1, _error, _response_error);
+      return;
+   }
+   
+   if (!sendDoubleResponse(ExpertHandle, iOpen(symbol, (ENUM_TIMEFRAMES)timeframe, shift), _response_error))
+   {
+      PrintResponseError("iOpen", _response_error);
+   }
+}
+
+void Execute_iClose()
+{
+   string symbol;
+   int timeframe;
+   int shift;
+   StringInit(symbol, 100, 0);
+   
+   if (!getStringValue(ExpertHandle, 0, symbol, _error))
+   {
+      PrintParamError("iClose", "symbol", _error);
+      sendErrorResponse(ExpertHandle, -1, _error, _response_error);
+      return;
+   }
+   if (!getIntValue(ExpertHandle, 1, timeframe, _error))
+   {
+      PrintParamError("iClose", "timeframe", _error);
+      sendErrorResponse(ExpertHandle, -1, _error, _response_error);
+      return;
+   }
+   if (!getIntValue(ExpertHandle,2, shift, _error))
+   {
+      PrintParamError("iClose", "shift", _error);
+      sendErrorResponse(ExpertHandle, -1, _error, _response_error);
+      return;
+   }
+   
+   if (!sendDoubleResponse(ExpertHandle, iClose(symbol, (ENUM_TIMEFRAMES)timeframe, shift), _response_error))
+   {
+      PrintResponseError("iClose", _response_error);
    }
 }
 

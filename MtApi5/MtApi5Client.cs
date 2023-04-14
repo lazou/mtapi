@@ -1025,6 +1025,32 @@ namespace MtApi5
         }
 
         ///<summary>
+        ///Returns the Open price of the bar (indicated by the 'shift' parameter) on the corresponding chart.
+        ///</summary>
+        ///<param name="symbolName">The symbol name of the financial instrument. NULL means the current symbol.</param>
+        ///<param name="timeframe">Period. It can be one of the values of the ENUM_TIMEFRAMES enumeration. 0 means the current chart period.</param>
+        ///<param name="shift">The index of the received value from the timeseries (backward shift by specified number of bars relative to the current bar).</param>
+        public double iOpen(string symbolName, ENUM_TIMEFRAMES timeframe, int shift)
+        {
+            var commandParameters = new ArrayList { symbolName, (int)timeframe, shift };
+
+            return SendCommand<double>(Mt5CommandType.iOpen, commandParameters);
+        }
+
+        ///<summary>
+        ///Returns the Close price of the bar (indicated by the 'shift' parameter) on the corresponding chart.
+        ///</summary>
+        ///<param name="symbolName">The symbol name of the financial instrument. NULL means the current symbol.</param>
+        ///<param name="timeframe">Period. It can be one of the values of the ENUM_TIMEFRAMES enumeration. 0 means the current chart period.</param>
+        ///<param name="shift">The index of the received value from the timeseries (backward shift by specified number of bars relative to the current bar).</param>
+        public double iClose(string symbolName, ENUM_TIMEFRAMES timeframe, int shift)
+        {
+            var commandParameters = new ArrayList { symbolName, (int)timeframe, shift };
+
+            return SendCommand<double>(Mt5CommandType.iClose, commandParameters);
+        }
+
+        ///<summary>
         ///The function gets to time_array history data of bar opening time for the specified symbol-period pair in the specified quantity. It should be noted that elements ordering is from present to past, i.e., starting position of 0 means the current bar.
         ///</summary>
         ///<param name="symbolName">Symbol name.</param>

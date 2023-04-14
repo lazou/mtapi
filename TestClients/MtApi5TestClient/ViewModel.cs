@@ -37,6 +37,8 @@ namespace MtApi5TestClient
         public DelegateCommand TerminalInfoStringCommand { get; private set; }
 
         public DelegateCommand CopyRatesCommand { get; private set; }
+        public DelegateCommand iOpenCommand { get; private set; }
+        public DelegateCommand iCloseCommand { get; private set; }
         public DelegateCommand CopyTimesCommand { get; private set; }
         public DelegateCommand CopyOpenCommand { get; private set; }
         public DelegateCommand CopyHighCommand { get; private set; }
@@ -355,6 +357,8 @@ namespace MtApi5TestClient
             TerminalInfoStringCommand = new DelegateCommand(ExecuteTerminalInfoString);
 
             CopyRatesCommand = new DelegateCommand(ExecuteCopyRates);
+            iOpenCommand = new DelegateCommand(ExecuteIOpen);
+            iCloseCommand = new DelegateCommand(ExecuteIClose);
             CopyTimesCommand = new DelegateCommand(ExecuteCopyTime);
             CopyOpenCommand = new DelegateCommand(ExecuteCopyOpen);
             CopyHighCommand = new DelegateCommand(ExecuteCopyHigh);
@@ -914,6 +918,22 @@ namespace MtApi5TestClient
 
             AddLog("CopyRates: success");
 
+        }
+
+        private async void ExecuteIOpen(object o)
+        {
+            if (string.IsNullOrEmpty(TimeSeriesValues?.SymbolValue)) return;
+
+            var retVal = await Execute(() => _mtApiClient.iOpen(TimeSeriesValues.SymbolValue, TimeSeriesValues.TimeFrame, 0));
+            AddLog($"iOpen({TimeSeriesValues.SymbolValue}, {TimeSeriesValues.TimeFrame}, 0): result = {retVal}");
+        }
+
+        private async void ExecuteIClose(object o)
+        {
+            if (string.IsNullOrEmpty(TimeSeriesValues?.SymbolValue)) return;
+
+            var retVal = await Execute(() => _mtApiClient.iClose(TimeSeriesValues.SymbolValue, TimeSeriesValues.TimeFrame, 0));
+            AddLog($"iClose({TimeSeriesValues.SymbolValue}, {TimeSeriesValues.TimeFrame}, 0): result = {retVal}");
         }
 
         private async void ExecuteCopyTickVolume(object o)
