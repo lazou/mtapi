@@ -83,7 +83,15 @@ jobs:
         run: 
           echo "::set-output name=LOG::$(
              git log HEAD --pretty=format:"%h %s" -n 1
-          )"      
+          )"
+      - name: Remove latest Release
+        if: github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete Latest -y
+          gh api repos/:owner/:repo/git/refs/tags/Latest -X DELETE
+        continue-on-error: true # in case release / tag does not exist
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
