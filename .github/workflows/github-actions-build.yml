@@ -31,14 +31,6 @@ jobs:
         run: nuget restore MetaTraderApi_2017.sln
       - name: Build Solution
         run: msbuild MetaTraderApi_2017.sln -t:rebuild -verbosity:diag -property:Configuration=Release
-      #- name: Build MTApiService for release
-      #  run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
-      #- name: Build MtApi5 for release
-      #  run: dotnet build MtApi5\MtApi5.csproj -c Release
-      #- name: Build MT5Connector for release
-      #  run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release /p:PreferredToolArchitecture=x64     
-      #- name: Build Installer for release
-      #  run: dotnet build MtApi5Installer\MtApi5Installer.wixproj -c Release
       - name: Prepair target file structure
         env:
           WORK_DIR: ${{ github.workspace }}
@@ -63,6 +55,7 @@ jobs:
           move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApi5.dll"
           move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
           move "${{ env.WORK_DIR }}\build\installers\Release\*.msi" "${{ env.WORK_DIR }}\artifacts\installers\"
+          move "${{ env.WORK_DIR }}\build\installers\Release\*.exe" "${{ env.WORK_DIR }}\artifacts\installers\"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         env:
