@@ -1,5 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
-	<?define MsiSourceFileName="MtApi5Installer_x64.msi"?>
+	<?define MsiSourceFileName="MtApi5Installer.msi"?>
 	<?define VcRedistFileName="vc_redist.x64.exe"?>
 	<?define ProductName="!(bind.packageName.MtApi5Msi)" ?>
 	<?define ProductVersion="!(bind.packageVersion.MtApi5Msi)" ?>
