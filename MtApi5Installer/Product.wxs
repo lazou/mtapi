@@ -47,7 +47,7 @@
             </Component>
 
             <Component Id="MtApiServiceNetCoreDll" Directory="INSTALLFOLDER">
-                <File Id="GAC_MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
+                <File Id="MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
                     Source="$(var.ProductPath)MtApiServiceNetCore.dll"/>
             </Component>
 
