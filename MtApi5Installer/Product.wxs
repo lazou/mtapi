@@ -20,13 +20,13 @@
 	</Package>
 
 	<Fragment>
-		<StandardDirectory Id="ProgramFiles6432Folder">
+		<StandardDirectory Id="ProgramFiles64Folder">
 			<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)">
 				<Directory Id="ExpertFolder" Name="Experts"/>
 				<Directory Id="GAC" Name="GAC"/>
 			</Directory>
 		</StandardDirectory>
-		<StandardDirectory Id="System6432Folder"/>
+		<StandardDirectory Id="System64Folder"/>
 		<StandardDirectory Id="ProgramMenuFolder">
 			<Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)"/>
 		</StandardDirectory>

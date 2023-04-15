@@ -29,14 +29,16 @@ jobs:
             ${{ runner.os }}-nuget-
       - name: Restore nuget packages
         run: nuget restore MetaTraderApi_2017.sln
-      - name: Build MTApiService for release
-        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
-      - name: Build MtApi5 for release
-        run: dotnet build MtApi5\MtApi5.csproj -c Release
-      - name: Build MT5Connector for release
-        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release /p:PreferredToolArchitecture=x64     
-      - name: Build Installer for release
-        run: dotnet build MtApi5Installer\MtApi5Installer.wixproj -c Release
+      - name: Build Solution
+        run: msbuild MetaTraderApi_2017.sln -t:rebuild -verbosity:diag -property:Configuration=Release
+      #- name: Build MTApiService for release
+      #  run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      #- name: Build MtApi5 for release
+      #  run: dotnet build MtApi5\MtApi5.csproj -c Release
+      #- name: Build MT5Connector for release
+      #  run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release /p:PreferredToolArchitecture=x64     
+      #- name: Build Installer for release
+      #  run: dotnet build MtApi5Installer\MtApi5Installer.wixproj -c Release
       - name: Prepair target file structure
         env:
           WORK_DIR: ${{ github.workspace }}
