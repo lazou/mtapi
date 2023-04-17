@@ -239,13 +239,13 @@ namespace MTApiService
     [DataContract]
     public class MtResponseMqlRatesArray : MtResponse
     {
-        public MtResponseMqlRatesArray(MtMqlRates[] value)
+        public MtResponseMqlRatesArray(string value)
         {
             Value = value;
         }
 
         [DataMember]
-        public MtMqlRates[] Value { get; private set; }
+        public string Value { get; private set; }
 
         public override object GetValue() { return Value; }
 

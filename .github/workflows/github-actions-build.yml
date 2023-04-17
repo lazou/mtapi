@@ -44,10 +44,7 @@ jobs:
           mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include
           mkdir ${{ env.WORK_DIR }}\artifacts\client
           mkdir ${{ env.WORK_DIR }}\artifacts\installers
-          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\artifacts\portable\MTApiService.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.lib" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.lib"
-          move "${{ env.BUILD_DIR }}\MT5Connector.exp" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.exp"
+          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MTApiService.dll"
           move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.ex5"
           move "${{ env.WORK_DIR }}\mq5\MtApi5.mq5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.mq5"
           move "${{ env.WORK_DIR }}\mq5\hash.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\hash.mqh"
@@ -55,7 +52,6 @@ jobs:
           move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApi5.dll"
           move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
           move "${{ env.WORK_DIR }}\build\installers\Release\*.msi" "${{ env.WORK_DIR }}\artifacts\installers\"
-          move "${{ env.WORK_DIR }}\build\installers\Release\*.exe" "${{ env.WORK_DIR }}\artifacts\installers\"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         env:

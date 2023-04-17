@@ -28,7 +28,6 @@
     <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\MTApiService\IMetaTraderHandler.cs" Link="IMetaTraderHandler.cs" />
     <Compile Include="..\MTApiService\ITaskExecutor.cs" Link="ITaskExecutor.cs" />
     <Compile Include="..\MTApiService\LogConfigurator.cs" Link="LogConfigurator.cs" />
     <Compile Include="..\MTApiService\Mt5Expert.cs" Link="Mt5Expert.cs" />

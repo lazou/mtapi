@@ -79,11 +79,6 @@
                     Assembly=".net" AssemblyManifest="MTApiService.dll" Vital="yes" />
             </Component>
 
-            <Component Id="MT5ConnectorDll" Directory="$(var.PlatformSystemFolder)" Bitness="always64">
-                <File Id="MT5Connector5.dll" Name="MT5Connector.dll" KeyPath="yes"
-                      Source="$(var.ProductPathNative)MT5Connector.dll" />
-            </Component>
-
         </ComponentGroup>
     </Fragment>
 </Wix>
