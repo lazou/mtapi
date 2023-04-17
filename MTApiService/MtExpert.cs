@@ -197,7 +197,7 @@ namespace MTApiService
             return task;
         }
 
-        private void NotifyCommandReady()
+        protected virtual void NotifyCommandReady()
         {
             Log.Debug("NotifyCommandReady: begin.");
 
