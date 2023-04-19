@@ -1,11 +1,7 @@
 ﻿using MTApiService;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +11,6 @@ namespace MTApiServerStandalone
     {
         static void Main(string[] args)
         {
-            var handlerMock = new MetaTraderHandlerMock();
 
             Console.WriteLine("Starting server...");
 
@@ -27,7 +22,7 @@ namespace MTApiServerStandalone
 
             Task.Factory.StartNew(() =>
             {
-                Mt5Expert expert = new Mt5Expert(0, "[ANY100]", 10000, 9999, handlerMock, true);
+                var expert = new Mt5ExpertCustom(0, "[ANY100]", 10000, 9999, true);
                 MtAdapter.GetInstance().AddExpert(8222, expert);
                 Console.WriteLine("Server started");
             });
@@ -52,13 +47,6 @@ namespace MTApiServerStandalone
 
             Console.ReadLine();
             sendTicksToken.Cancel();
-        }
-    }
-
-    class CustomMt5Expert : Mt5Expert
-    {
-        public CustomMt5Expert(int handle, string symbol, double bid, double ask, IMetaTraderHandler mtHandler, bool isTestMode) : base(handle, symbol, bid, ask, mtHandler, isTestMode)
-        {
         }
     }
 }

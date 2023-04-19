@@ -9,8 +9,8 @@ namespace MTApiService
         private System.Timers.Timer _stopTimer;
 
 
-        public Mt5Expert(int handle, string symbol, double bid, double ask, IMetaTraderHandler mtHandler, bool isTestMode) : 
-            base(handle, symbol, bid, ask, mtHandler)
+        public Mt5Expert(int handle, string symbol, double bid, double ask, bool isTestMode) : 
+            base(handle, symbol, bid, ask)
         {
             IsTestMode = isTestMode;
         }
