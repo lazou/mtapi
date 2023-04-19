@@ -48,7 +48,7 @@ namespace MTApiService
             if (expert == null)
                 throw new ArgumentNullException(nameof(expert));
 
-            Log.InfoFormat("AddExpert: begin. expert = {0}", expert);
+            Log.InfoFormat($"AddExpert: begin. port = {port}, expert = {expert}");
 
             MtServer server;
             lock (_servers)

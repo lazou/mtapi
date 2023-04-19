@@ -1,0 +1,92 @@
+name: GitHub Actions Build
+run-name: Building & uploading projects
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  Build-Solution:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.3
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+            dotnet-version: '5.0.x'
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Restore nuget packages
+        run: nuget restore MetaTraderApi_2017.sln
+      - name: Build Solution
+        run: msbuild MetaTraderApi_2017.sln -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Prepair target file structure
+        env:
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release 
+        run: |
+          mkdir ${{ env.WORK_DIR }}\artifacts
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts
+          mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include
+          mkdir ${{ env.WORK_DIR }}\artifacts\client
+          mkdir ${{ env.WORK_DIR }}\artifacts\installers
+          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MTApiService.dll"
+          move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.ex5"
+          move "${{ env.WORK_DIR }}\mq5\MtApi5.mq5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.mq5"
+          move "${{ env.WORK_DIR }}\mq5\hash.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\hash.mqh"
+          move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\json.mqh"
+          move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApi5.dll"
+          move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
+          move "${{ env.WORK_DIR }}\build\installers\Release\*.msi" "${{ env.WORK_DIR }}\artifacts\installers\"
+      - name: PR artifacts
+        uses: actions/upload-artifact@v3
+        env:
+          WORK_DIR: ${{ github.workspace }}
+          BUILD_DIR: ${{ github.workspace }}\build\products\Release 
+        #if: github.ref != 'refs/heads/master'
+        with:
+          name: MetaTraderApi
+          retention-days: 5
+          path: ${{ env.WORK_DIR }}\artifacts\
+          if-no-files-found: error
+      - name: Zip artifacts for release
+        if: github.ref == 'refs/heads/master'
+        env:
+          WORK_DIR: ${{ github.workspace }}
+        run: |
+          Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts\* -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi.zip      
+      - name: Get Release text
+        id: release_log
+        run: 
+          echo "::set-output name=LOG::$(
+             git log HEAD --pretty=format:"%h %s" -n 1
+          )"
+      - name: Remove latest Release
+        if: github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete Latest -y
+          gh api repos/:owner/:repo/git/refs/tags/Latest -X DELETE
+        continue-on-error: true # in case release / tag does not exist
+      - name: Release to Latest
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          tag_name: Latest
+          body: ${{ steps.release_log.outputs.LOG }}
+          files: ${{ env.WORK_DIR }}\MetaTraderApi.zip

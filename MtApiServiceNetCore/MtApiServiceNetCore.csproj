@@ -4,8 +4,13 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\build\products\Debug\</OutputPath>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>..\build\products\Debug\</OutputPath>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
@@ -14,11 +19,15 @@
     <DefineConstants></DefineConstants>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutputPath>..\build\products\Release\</OutputPath>
+    <DefineConstants />
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\MTApiService\IMetaTraderHandler.cs" Link="IMetaTraderHandler.cs" />
     <Compile Include="..\MTApiService\ITaskExecutor.cs" Link="ITaskExecutor.cs" />
     <Compile Include="..\MTApiService\LogConfigurator.cs" Link="LogConfigurator.cs" />
     <Compile Include="..\MTApiService\Mt5Expert.cs" Link="Mt5Expert.cs" />

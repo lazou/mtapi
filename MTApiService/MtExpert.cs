@@ -1,32 +1,35 @@
 ﻿using System;
 using log4net;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 
 namespace MTApiService
 {
+
     public class MtExpert: ITaskExecutor
     {
+
+        [DllImport("user32.dll")]
+        static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
+        const uint WM_TIMER = 0x0113;
+
         public delegate void MtQuoteHandler(MtExpert expert, MtQuote quote);
         public delegate void MtEventHandler(MtExpert expert, MtEvent e);
 
         #region Private Fields
         private static readonly ILog Log = LogManager.GetLogger(typeof(MtExpert));
 
-        private readonly IMetaTraderHandler _mtHadler;
         private MtCommandTask _currentTask;
         private readonly Queue<MtCommandTask> _taskQueue = new Queue<MtCommandTask>();
         private readonly object _locker = new object();
         #endregion
 
         #region Public Methods
-        public MtExpert(int handle, string symbol, double bid, double ask, IMetaTraderHandler mtHandler)
+        public MtExpert(int handle, string symbol, double bid, double ask)
         {
-            if (mtHandler == null)
-                throw new ArgumentNullException(nameof(mtHandler));
-
             _quote = new MtQuote { ExpertHandle = handle, Instrument = symbol, Bid = bid, Ask =  ask};
             Handle = handle;
-            _mtHadler = mtHandler;
         }
 
         public virtual void Deinit()
@@ -194,11 +197,11 @@ namespace MTApiService
             return task;
         }
 
-        private void NotifyCommandReady()
+        protected virtual void NotifyCommandReady()
         {
             Log.Debug("NotifyCommandReady: begin.");
 
-            _mtHadler.SendTickToMetaTrader(Handle);
+            PostMessage(new IntPtr(Handle), WM_TIMER, 0, 0);
 
             Log.Debug("NotifyCommandReady: end.");
         }
