@@ -44,6 +44,23 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>MtApiKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\build\products\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\build\products\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
@@ -62,9 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICommandManager.cs" />
-    <Compile Include="IMetaTraderHandler.cs" />
     <Compile Include="ITaskExecutor.cs" />
     <Compile Include="LogConfigurator.cs" />
+    <Compile Include="Mt5Connector.cs" />
     <Compile Include="Mt5Expert.cs" />
     <Compile Include="MtCommandEventArgs.cs" />
     <Compile Include="IDisposableChannel.cs" />

@@ -1,70 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <?define ProductName="MtApi5" ?>
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+	<?define ProductName="MtApi5" ?>
+	<?define ProductPathNative="..\build\products\$(var.Configuration)\"?>
+	<?define PlatformSystemFolder = "System64Folder" ?>
+	<?define ProductVersion=!(bind.FileVersion.MtApi5.dll) ?>
+	<?define Manufacturer="DW"?>
+	<?define ProductPath="..\build\products\$(var.Configuration)\"?>
 
-    <?if $(var.Platform) = x64 ?>
-        <?define ProductPathNative="..\build\products\$(var.Configuration)\"?>
-        <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
-        <?define PlatformSystemFolder = "System64Folder" ?>    
-    <?else ?>
-        <?define ProductPathNative="..\build\products\$(var.Configuration)\"?>
-        <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
-        <?define PlatformSystemFolder = "SystemFolder" ?>
-    <?endif ?>
+	<Package Name="$(var.ProductName) $(var.ProductVersion)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="d72d346e-e6f7-4c23-85c6-1c42b3175599" InstallerVersion="200">
+		<WixVariable Id="WixUILicenseRtf" Value="..\LICENSE.rtf" />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+		<Feature Id="MtApi5" Title="$(var.ProductName)" Level="1">
+			<ComponentGroupRef Id="MtApi5Components" />
+		</Feature>
+		<Feature Id="MT5Connector" Title="MT5 Connector" Level="1">
+			<ComponentGroupRef Id="MT5ConnectorComponents" />
+		</Feature>
+		<ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+	</Package>
 
-    <?define ProductVersion=!(bind.FileVersion.MtApi5.dll) ?>
-    <?define Manufacturer="DW"?>
-    <?define ProductPath="..\build\products\$(var.Configuration)\"?>
-    
-  <Product Id="*" 
-            Name="$(var.ProductName) $(var.ProductVersion)" 
-            Language="1033" 
-            Version="$(var.ProductVersion)" 
-            Manufacturer="$(var.Manufacturer)" 
-            UpgradeCode="d72d346e-e6f7-4c23-85c6-1c42b3175599">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-    
-    <WixVariable Id="WixUILicenseRtf" Value="..\LICENSE.rtf" />
-
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-        <MediaTemplate EmbedCab="yes" />
-
-        <Feature Id="MtApi5" Title="$(var.ProductName)" Level="1">
-            <ComponentGroupRef Id="MtApi5Components"/>
-        </Feature>
-
-        <Feature Id="MT5Connector" Title="MT5 Connector" Level="1">
-            <ComponentGroupRef Id="MT5ConnectorComponents"/>
-        </Feature>
-
-        <Property Id="WIXUI_INSTALLDIR">INSTALLFOLDER</Property>
-        <UIRef Id="WixUI_Mondo" />
-  </Product>
-
-    <Fragment>
-        <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="$(var.PlatformProgramFilesFolder)">
-                <Directory Id="INSTALLFOLDER" Name="$(var.ProductName)">
-
-                    <Directory Id="ExpertFolder" Name="Experts">
-                    </Directory>
-
-                    <Directory Id="GAC" Name="GAC">
-                    </Directory>
-
-                </Directory>
-            </Directory>
-
-            <Directory Id="$(var.PlatformSystemFolder)">
-            </Directory>
-
-            <Directory Id="ProgramMenuFolder">
-                <Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)">
-                </Directory>
-            </Directory>
-
-        </Directory>
-    </Fragment>
+	<Fragment>
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="INSTALLFOLDER" Name="$(var.ProductName)">
+				<Directory Id="ExpertFolder" Name="Experts"/>
+				<Directory Id="GAC" Name="GAC"/>
+			</Directory>
+		</StandardDirectory>
+		<StandardDirectory Id="System64Folder"/>
+		<StandardDirectory Id="ProgramMenuFolder">
+			<Directory Id="ApplicationProgramsFolder" Name="$(var.ProductName)"/>
+		</StandardDirectory>
+	</Fragment>
 
     <Fragment>
         <ComponentGroup Id="MtApi5Components">
@@ -74,16 +40,15 @@
                     Source="$(var.ProductPath)MtApi5.dll" />
 
                 <RegistryKey Root="HKLM"
-                    Key="Software\Microsoft\.NetFramework\v4.0.30319\AssemblyFoldersEx\$(var.ProductName)"
-                    Action="createAndRemoveOnUninstall">
+                    Key="Software\Microsoft\.NetFramework\v4.0.30319\AssemblyFoldersEx\$(var.ProductName)">
 					<RegistryValue Type="string" Value="[INSTALLFOLDER]"/>
                 </RegistryKey>
 
             </Component>
 
             <Component Id="MtApiServiceNetCoreDll" Directory="INSTALLFOLDER">
-                <File Id="GAC_MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
-                    src="$(var.ProductPath)MtApiServiceNetCore.dll"/>
+                <File Id="MtApiServiceNetCore.dll" Name="MtApiServiceNetCore.dll" KeyPath="yes"
+                    Source="$(var.ProductPath)MtApiServiceNetCore.dll"/>
             </Component>
 
             <Component Id="MtApi5Expert" Directory="ExpertFolder">
@@ -102,8 +67,7 @@
 
             <Component Id="ConnectionProfileRegistryKey" Guid="*" Directory="INSTALLFOLDER">
                 <RegistryKey Root="HKCU"
-                             Key="Software\MtApi\ConnectionProfiles\Local"
-                      Action="createAndRemoveOnUninstall">
+                             Key="Software\MtApi\ConnectionProfiles\Local">
                     <RegistryValue Type="string" Name="Host" Value=""/>
                     <RegistryValue Type="integer" Name="Port" Value="8222" KeyPath="yes"/>
                 </RegistryKey>
@@ -111,13 +75,8 @@
 
             <Component Id="MTApiServiceDllGAC" Guid="6CD24D64-7DA1-4015-A5B3-B17C2488998C" Directory="GAC">
                 <File Id="MTApiService.dll" Name="MTApiService.dll" KeyPath="yes"
-                    src="$(var.ProductPath)MTApiService.dll" Checksum="yes"
+                    Source="$(var.ProductPath)MTApiService.dll" Checksum="yes"
                     Assembly=".net" AssemblyManifest="MTApiService.dll" Vital="yes" />
-            </Component>
-
-            <Component Id="MT5ConnectorDll" Directory="$(var.PlatformSystemFolder)">
-                <File Id="MT5Connector5.dll" Name="MT5Connector.dll" KeyPath="yes"
-                      Source="$(var.ProductPathNative)MT5Connector.dll" />
             </Component>
 
         </ComponentGroup>

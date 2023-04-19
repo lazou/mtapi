@@ -936,21 +936,10 @@ namespace MtApi5
 
             ratesArray = null;
 
-            var retVal = SendCommand<MtMqlRates[]>(Mt5CommandType.CopyRates, commandParameters);
+            var retVal = SendCommand<string>(Mt5CommandType.CopyRates, commandParameters);
             if (retVal != null)
             {
-                ratesArray = new MqlRates[retVal.Length];
-                for (var i = 0; i < retVal.Length; i++)
-                {
-                    ratesArray[i] = new MqlRates(retVal[i].time
-                        , retVal[i].open
-                        , retVal[i].high
-                        , retVal[i].low
-                        , retVal[i].close
-                        , retVal[i].tick_volume
-                        , retVal[i].spread
-                        , retVal[i].real_volume);
-                }
+                ratesArray = JsonSerializer.Deserialize<MqlRates[]>(retVal);
             }
 
             return ratesArray?.Length ?? 0;
@@ -970,21 +959,10 @@ namespace MtApi5
 
             ratesArray = null;
 
-            var retVal = SendCommand<MtMqlRates[]>(Mt5CommandType.CopyRates1, commandParameters);
+            var retVal = SendCommand<string>(Mt5CommandType.CopyRates1, commandParameters);
             if (retVal != null)
             {
-                ratesArray = new MqlRates[retVal.Length];
-                for (var i = 0; i < retVal.Length; i++)
-                {
-                    ratesArray[i] = new MqlRates(retVal[i].time
-                        , retVal[i].open
-                        , retVal[i].high
-                        , retVal[i].low
-                        , retVal[i].close
-                        , retVal[i].tick_volume
-                        , retVal[i].spread
-                        , retVal[i].real_volume);
-                }
+                ratesArray = JsonSerializer.Deserialize<MqlRates[]>(retVal);
             }
 
             return ratesArray?.Length ?? 0;
@@ -1004,21 +982,10 @@ namespace MtApi5
 
             ratesArray = null;
 
-            var retVal = SendCommand<MtMqlRates[]>(Mt5CommandType.CopyRates2, commandParameters);
+            var retVal = SendCommand<string>(Mt5CommandType.CopyRates2, commandParameters);
             if (retVal != null)
             {
-                ratesArray = new MqlRates[retVal.Length];
-                for (var i = 0; i < retVal.Length; i++)
-                {
-                    ratesArray[i] = new MqlRates(retVal[i].time
-                        , retVal[i].open
-                        , retVal[i].high
-                        , retVal[i].low
-                        , retVal[i].close
-                        , retVal[i].tick_volume
-                        , retVal[i].spread
-                        , retVal[i].real_volume);
-                }
+                ratesArray = JsonSerializer.Deserialize<MqlRates[]>(retVal);
             }
 
             return ratesArray?.Length ?? 0;

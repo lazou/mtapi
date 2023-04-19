@@ -14,7 +14,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+        uses: microsoft/setup-msbuild@v1.3
       - name: Setup Nuget
         uses: Nuget/setup-nuget@v1      
       - name: Setup dotnet
@@ -29,14 +29,8 @@ jobs:
             ${{ runner.os }}-nuget-
       - name: Restore nuget packages
         run: nuget restore MetaTraderApi_2017.sln
-      - name: Build MTApiService for release
-        run: msbuild MTApiService\MTApiService.csproj -t:rebuild -verbosity:diag -property:Configuration=Release
-      - name: Build MtApi5 for release
-        run: dotnet build MtApi5\MtApi5.csproj -c Release
-      - name: Build MT5Connector for release
-        run: msbuild MT5Connector\MT5Connector.vcxproj -t:rebuild -verbosity:diag -property:Configuration=Release        
-      - name: Build Installer for release
-        run: msbuild MtApi5Installer\MtApi5Installer.wixproj -t:rebuild -verbosity:diag -property:Configuration=Release
+      - name: Build Solution
+        run: msbuild MetaTraderApi_2017.sln -t:rebuild -verbosity:diag -property:Configuration=Release
       - name: Prepair target file structure
         env:
           WORK_DIR: ${{ github.workspace }}
@@ -50,17 +44,14 @@ jobs:
           mkdir ${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include
           mkdir ${{ env.WORK_DIR }}\artifacts\client
           mkdir ${{ env.WORK_DIR }}\artifacts\installers
-          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\artifacts\portable\MTApiService.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.dll" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.dll"
-          move "${{ env.BUILD_DIR }}\MT5Connector.lib" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.lib"
-          move "${{ env.BUILD_DIR }}\MT5Connector.exp" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MT5Connector.exp"
+          move "${{ env.BUILD_DIR }}\MTApiService.dll" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Libraries\MTApiService.dll"
           move "${{ env.WORK_DIR }}\mq5\MtApi5.ex5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.ex5"
           move "${{ env.WORK_DIR }}\mq5\MtApi5.mq5" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Experts\MtApi5.mq5"
           move "${{ env.WORK_DIR }}\mq5\hash.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\hash.mqh"
           move "${{ env.WORK_DIR }}\mq5\json.mqh" "${{ env.WORK_DIR }}\artifacts\portable\MQL5\Include\json.mqh"
           move "${{ env.BUILD_DIR }}\MtApi5.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApi5.dll"
           move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
-          move "${{ env.WORK_DIR }}\build\installers\Release\MtApi5Installer_x86.msi" "${{ env.WORK_DIR }}\artifacts\installers\MtApi5Installer_x86.msi"
+          move "${{ env.WORK_DIR }}\build\installers\Release\*.msi" "${{ env.WORK_DIR }}\artifacts\installers\"
       - name: PR artifacts
         uses: actions/upload-artifact@v3
         env:
@@ -77,10 +68,25 @@ jobs:
         env:
           WORK_DIR: ${{ github.workspace }}
         run: |
-          Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts\* -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi.zip
+          Compress-Archive -Path ${{ env.WORK_DIR }}\artifacts\* -DestinationPath ${{ env.WORK_DIR }}\MetaTraderApi.zip      
+      - name: Get Release text
+        id: release_log
+        run: 
+          echo "::set-output name=LOG::$(
+             git log HEAD --pretty=format:"%h %s" -n 1
+          )"
+      - name: Remove latest Release
+        if: github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete Latest -y
+          gh api repos/:owner/:repo/git/refs/tags/Latest -X DELETE
+        continue-on-error: true # in case release / tag does not exist
       - name: Release to Latest
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
           tag_name: Latest
+          body: ${{ steps.release_log.outputs.LOG }}
           files: ${{ env.WORK_DIR }}\MetaTraderApi.zip
