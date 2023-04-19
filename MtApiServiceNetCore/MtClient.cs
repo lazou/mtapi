@@ -24,7 +24,16 @@ namespace MTApiService
         #endregion
 
         #region ctor
-        public MtClient(string host, int port)
+
+        private MtClient()
+        {
+            var quoteScheduler = new TaskFactory(TaskCreationOptions.AttachedToParent, TaskContinuationOptions.AttachedToParent);
+            var eventScheduler = new TaskFactory(TaskCreationOptions.AttachedToParent, TaskContinuationOptions.AttachedToParent);
+            lastQuoteTask = quoteScheduler.StartNew(() => { });
+            lastEventTask = eventScheduler.StartNew(() => { });
+        }
+
+        public MtClient(string host, int port): this()
         {
             if (string.IsNullOrEmpty(host))
                 throw new ArgumentNullException(nameof(host), "host is null or empty");
@@ -54,17 +63,39 @@ namespace MTApiService
                 }
             };
 
-            var quoteScheduler = new TaskFactory(TaskCreationOptions.AttachedToParent, TaskContinuationOptions.AttachedToParent);
-            var eventScheduler = new TaskFactory(TaskCreationOptions.AttachedToParent, TaskContinuationOptions.AttachedToParent);
-            lastQuoteTask = quoteScheduler.StartNew(() => { });
-            lastEventTask = eventScheduler.StartNew(() => { });
-
             _proxy = new MtApiProxy(new InstanceContext(this), bind, new EndpointAddress(urlService));
             _proxy.Faulted += ProxyFaulted;
         }
 
-        public MtClient(int port) : this("localhost", port)
-        { }
+        public MtClient(int port): this()
+        {
+            if (port < 0 || port > 65536)
+                throw new ArgumentOutOfRangeException(nameof(port), "port value is invalid");
+
+            Port = port;
+
+            var urlService = $"net.pipe://localhost/{ServiceName}_{port}";
+
+            var bind = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None)
+            {
+                MaxReceivedMessageSize = 2147483647,
+                MaxBufferSize = 2147483647,
+                MaxBufferPoolSize = 2147483647,
+                SendTimeout = new TimeSpan(12, 0, 0),
+                ReceiveTimeout = new TimeSpan(12, 0, 0),
+                ReaderQuotas =
+                {
+                    MaxArrayLength = 2147483647,
+                    MaxBytesPerRead = 2147483647,
+                    MaxDepth = 2147483647,
+                    MaxStringContentLength = 2147483647,
+                    MaxNameTableCharCount = 2147483647
+                }
+            };
+
+            _proxy = new MtApiProxy(new InstanceContext(this), bind, new EndpointAddress(urlService));
+            _proxy.Faulted += ProxyFaulted;
+        }
 
         #endregion
 
