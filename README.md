@@ -12,7 +12,7 @@ Use [MetaEditor](https://www.metatrader5.com/en/automated-trading/metaeditor) to
 
 ## How to Build Solution
 
-For building the solution for MT5, you need to choose the configuration to build for **`x64`** and start build **`MtApi5Installer`**.  This will build all projects related to MT5:  
+For building the solution for MT5, you need to start build **`MtApi5Installer`**. This will build all projects related to MT5:
 - `MtApi5` (client-side)
 - `MTApiServiceNetCore` (client-side)
 - `MTApiService` (server-side)
