@@ -3,6 +3,7 @@
     <ProductVersion>3.6</ProductVersion>
     <OutputName>MtApi5Installer</OutputName>
     <RunWixToolsOutOfProc>true</RunWixToolsOutOfProc>
+    <Platforms>x64;ARM64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>..\build\installers\$(Configuration)\</OutputPath>
