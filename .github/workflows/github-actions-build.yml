@@ -18,9 +18,9 @@ jobs:
       - name: Setup Nuget
         uses: Nuget/setup-nuget@v1      
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-            dotnet-version: '5.0.x'
+            dotnet-version: '9.0.x'
       - uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
@@ -53,7 +53,7 @@ jobs:
           move "${{ env.BUILD_DIR }}\MtApiServiceNetCore.dll" "${{ env.WORK_DIR }}\artifacts\client\MtApiServiceNetCore.dll"
           move "${{ env.WORK_DIR }}\build\installers\Release\*.msi" "${{ env.WORK_DIR }}\artifacts\installers\"
       - name: PR artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         env:
           WORK_DIR: ${{ github.workspace }}
           BUILD_DIR: ${{ github.workspace }}\build\products\Release 
